@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Number Guessing Game</title>
+</head>
+<body>
+
+    <h1>Number Guessing Game</h1>
+    <p>Guess the number between 1 and 100</p>
+    <input type="number" id="guessInput" placeholder="Enter your guess">
+    <button onclick="checkGuess()">Submit Guess</button>
+    <p id="hint"></p>
+    <p id="attempts">Attempts: 0</p>
+
+    <script>
+        class Game {
+            constructor() {
+                this.targetNumber = Math.floor(Math.random() * 100) + 1;
+                this.attempts = 0;
+            }
+
+            checkGuess(guess) {
+                this.attempts++;
+                if (guess < this.targetNumber) {
+                    return "higher";
+                } else if (guess > this.targetNumber) {
+                    return "lower";
+                } else {
+                    return "correct";
+                }
+            }
+
+            resetGame() {
+                this.targetNumber = Math.floor(Math.random() * 100) + 1;
+                this.attempts = 0;
+            }
+        }
+
+        let game = new Game();
+
+        function checkGuess() {
+            const guess = parseInt(document.getElementById('guessInput').value);
+            const hint = game.checkGuess(guess);
+            document.getElementById('attempts').innerText = `Attempts: ${game.attempts}`;
+
+            if (hint === "correct") {
+                document.getElementById('hint').innerText = `Congratulations! You guessed it in ${game.attempts} attempts.`;
+            } else {
+                document.getElementById('hint').innerText = `Try a ${hint} number.`;
+            }
+        }
+    </script>
+</body>
+</html>
