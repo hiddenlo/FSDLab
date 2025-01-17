@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Manager</title>
+    <style>
+        .overdue {
+            color: red;
+        }
+        .upcoming {
+            color: green;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Task Manager</h1>
+    <input type="text" id="taskName" placeholder="Task Name">
+    <input type="number" id="taskPriority" placeholder="Priority (1 - High, 3 - Low)">
+    <input type="date" id="taskDueDate">
+    <select id="taskStatus">
+        <option value="in-progress">In Progress</option>
+        <option value="completed">Completed</option>
+    </select>
+    <button onclick="addTask()">Add Task</button>
+    
+    <div id="taskList"></div>
+
+    <script>
+        class Task {
+            constructor(taskName, priority, dueDate, status) {
+                this.taskName = taskName;
+                this.priority = priority;
+                this.dueDate = new Date(dueDate);
+                this.status = status;
+            }
+        }
+
+        class TaskManager {
+            constructor() {
+                this.tasks = [];
+            }
+
+            addTask(task) {
+                this.tasks.push(task);
+                this.displayTasks();
+            }
+
+            deleteTask(taskName) {
+                this.tasks = this.tasks.filter(task => task.taskName !== taskName);
+                this.displayTasks();
+            }
+
+            updateTask(oldName, newTask) {
+                const index = this.tasks.findIndex(task => task.taskName === oldName);
+                if (index !== -1) {
+                    this.tasks[index] = newTask;
+                    this.displayTasks();
+                }
+            }
+
+            sortTasks() {
+                this.tasks.sort((a, b) => a.priority - b.priority || a.dueDate - b.dueDate);
+            }
+
+            getOverdueTasks() {
+                const now = new Date();
+                return this.tasks.filter(task => task.dueDate < now && task.status !== "completed");
+            }
+
+            getUpcomingTasks() {
+                const now = new Date();
+                return this.tasks.filter(task => task.dueDate >= now);
+            }
+
+            displayTasks() {
+                this.sortTasks();
+                const taskListDiv = document.getElementById("taskList");
+                taskListDiv.innerHTML = "";
+
+                this.tasks.forEach(task => {
+                    const taskDiv = document.createElement("div");
+                    const dueDateString = task.dueDate.toLocaleDateString();
+
+                    if (task.dueDate < new Date() && task.status !== "completed") {
+                        taskDiv.className = "overdue";
+                    } else {
+                        taskDiv.className = "upcoming";
+                    }
+
+                    taskDiv.innerHTML = `
+                        <strong>${task.taskName}</strong><br>
+                        Priority: ${task.priority} | Due Date: ${dueDateString} | Status: ${task.status}
+                        <button onclick="deleteTask('${task.taskName}')">Delete</button>
+                    `;
+                    taskListDiv.appendChild(taskDiv);
+                });
+            }
+        }
+
+        const taskManager = new TaskManager();
+
+        function addTask() {
+            const taskName = document.getElementById("taskName").value;
+            const priority = parseInt(document.getElementById("taskPriority").value);
+            const dueDate = document.getElementById("taskDueDate").value;
+            const status = document.getElementById("taskStatus").value;
+
+            if (taskName && priority && dueDate) {
+                const newTask = new Task(taskName, priority, dueDate, status);
+                taskManager.addTask(newTask);
+                clearInputFields();
+            } else {
+                alert("Please fill out all fields.");
+            }
+        }
+
+        function deleteTask(taskName) {
+            taskManager.deleteTask(taskName);
+        }
+
+        window.onload = () => taskManager.displayTasks();
+
+    </script>
+</body>
+</html>
