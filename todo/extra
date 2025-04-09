@@ -1,0 +1,40 @@
+const App = ()=>{
+
+    const [tasks,setTasks] = useState([])
+    const [editTask,setEditTask] = useState(null)
+    //const [token,setToken] = useState(localStorage.getItem('token'))
+
+    useEffect(() => {
+        fetchTasks();
+      }, []);
+    
+      const fetchTasks = async () => {
+        const res = await axios.get(API);
+        setTasks(res.data);
+      };
+    
+      const addOrUpdateTask = async (task) => {
+        if (task._id) {
+          await axios.put(`${API}/${task._id}`, task);
+        } else {
+          await axios.post(API, task);
+        }
+        setEditTask(null);
+        fetchTasks();
+      };
+
+    return(
+        <div className='App'>
+            <h2> Todo App</h2>
+            <taskForm onSave={addOrUpdateTask} editTask={editTask} />
+            <taskList
+              tasks={tasks}
+              onEdit={setEditTask}
+              //onDelete={deleteTask}
+              //onToggleComplete={toggleComplete}
+            />
+        </div>
+    )
+}
+
+export default App
