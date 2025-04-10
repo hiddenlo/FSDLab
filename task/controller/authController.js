@@ -22,8 +22,7 @@ const login = async (req,res)=>{
     const user = await User.findOne({email,password})
 
     if(!user)
-        if (!user)
-            return res.status(400).json({ message: "Error no user found" });
+        return res.status(400).json({ message: "Error no user found" });
         
 
     const token = jwt.sign({ id: user._id }, process.env.SECRET_KEY)

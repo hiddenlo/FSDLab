@@ -1,14 +1,13 @@
-import React,{useEffect,useState} from 'react'
-import axios from 'axios'
-import Create from './Create'
+import React from 'react';
+import './App.css';
+import Home from './Home';
 
-const App = ()=>{
-    return(
+const App = () => {
+    return (
         <div>
-            <h1>TODO</h1>
-            <Create/>
+            <Home />
         </div>
-    )
-}
+    );
+};
 
-export default App
+export default App;
