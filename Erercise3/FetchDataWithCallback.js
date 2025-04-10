@@ -1,20 +1,21 @@
-function fetchDataWithCallback(callback) {
+function getUserDetails(userId, callback) {
     setTimeout(() => {
-      const flag = Math.random() > 0.5;
-      if (flag) {
-        const result = { id: 1, name: "Shravya Adarapu" };
-        callback(null, result); 
-      } else {
-        callback("Failed to fetch data.", null); 
-      }
-    }, 2000); 
-}
-fetchDataWithCallback((err, data) => {
-    if (err) {
-      console.error("Error:", err);
-    } else {
-      console.log("Success:", data);
-    }
-});
-
+      const users = {
+        1: { name: "Alice", age: 25 },
+        2: { name: "Bob", age: 30 },
+      };
   
+      if (users[userId]) {
+        callback(null, users[userId]);
+      } else {
+        callback("User not found", null);
+      }
+    }, 1000); // 1 second delay
+  }
+  getUserDetails(1, (err, data) => {
+    if (err) {
+      console.log("Error:", err);
+    } else {
+      console.log("User Found:", data);
+    }
+  });
