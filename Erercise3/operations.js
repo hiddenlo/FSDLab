@@ -1,20 +1,22 @@
-function add(n,callback)
-{
-    return callback(n+10);
-}
-function subtract(n,callback)
-{
-    return callback(n-3);
-}
-function multiply(n)
-{
-    return n*2;
+function multiplyBy2(n, callback) {
+    return callback(n * 2);
 }
 
-const ans=add(10,(res1)=>{
-    return subtract(res1,(res2)=>{
-        return multiply(res2)
-    })
+function subtract3(n, callback) {
+    return callback(n - 3);
+}
+
+function add10(n, callback) {
+    return callback(n + 10);
+}
+
+// Now chaining the operations:
+const result = multiplyBy2(5, (res1) => {
+    return subtract3(res1, (res2) => {
+        return add10(res2, (res3) => {
+            return res3;
+        });
+    });
 });
 
-console.log(ans);
+console.log(result);
